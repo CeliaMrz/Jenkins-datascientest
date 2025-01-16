@@ -21,8 +21,8 @@ pipeline {
                 script {
                     sh '''
                     docker rm -f jenkins || true
-                    docker build -t $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG .
-                    docker run -d -p 8000:8000 --name jenkins $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+                    docker build -t ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    docker run -d -p 8000:8000 --name jenkins ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
                     '''
                 }
             }
@@ -38,14 +38,13 @@ pipeline {
                     environment {
                         DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_PASS')
                     }
-                    steps{
-script{
-sh’‘’
-echo $DOCKERHUB_CREDENTIALS | docker login -u $DOCKER_ID – password-stdin
-docker image push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
-‘’’
-}
-                    }
+                    steps {
+                        script {
+                            sh '''
+                            echo $DOCKERHUB_CREDENTIALS | docker login -u $DOCKER_ID --password-stdin
+                            docker image push ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            '''
+                        }
                     }
                 }
                 stage('Merging') {
