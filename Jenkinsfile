@@ -35,16 +35,14 @@ pipeline {
         stage('Pushing and Merging') {
             parallel {
                 stage('Pushing Image') {
-    steps {
-        script {
-            // Use DockerHub credentials
-            docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_PASS') {
-                sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
-                sh 'docker push dstdockerhub/datascientestapi:v.14.0'
-            }
-        }
-    }
-}
+                    environment {
+                        DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_PASS')
+                    }
+                    steps {
+                        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                        sh 'docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG'
+                    }
+                }
                 stage('Merging') {
                     steps {
                         echo 'Merging done'
