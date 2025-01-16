@@ -35,18 +35,21 @@ pipeline {
         stage('Pushing and Merging') {
             parallel {
                 stage('Pushing Image') {
-                    environment {
-                        DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_PASS')
-                    }
-                    steps {
-                        script {
-                            sh '''
-                            echo $DOCKERHUB_CREDENTIALS | docker login -u $DOCKER_ID --password-stdin
-                            docker image push ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
-                            '''
-                        }
-                    }
-                }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_PASS')
+    }
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh '''
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                docker image push ${DOCKER_ID}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                '''
+            }
+        }
+    }
+}
+
                 stage('Merging') {
                     steps {
                         echo 'Merging done'
