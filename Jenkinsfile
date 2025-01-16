@@ -44,6 +44,7 @@ sh’‘’
 echo $DOCKERHUB_CREDENTIALS | docker login -u $DOCKER_ID – password-stdin
 docker image push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
 ‘’’
+}
                     }
                 }
                 stage('Merging') {
