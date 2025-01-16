@@ -31,7 +31,6 @@ pipeline {
         steps{
             input(message: "Proceed to push to main", ok: "Yes")
         }
-    }
           }
           stage('Pushing and Merging'){
             parallel {
