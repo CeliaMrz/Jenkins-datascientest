@@ -38,7 +38,7 @@ pipeline {
     steps {
         script {
             // Use DockerHub credentials
-            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+            docker.withRegistry('https://index.docker.io/v1/', 'DOCKER_HUB_PASS') {
                 sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
                 sh 'docker push dstdockerhub/datascientestapi:v.14.0'
             }
